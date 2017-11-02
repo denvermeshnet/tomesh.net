@@ -4,6 +4,8 @@ var markers = [];
 var currentNodeListURL;
 var circle = null;
 var pingData;
+var linkData;
+var markerByIPV6 = new Object();
 
 function initialize() {
 
@@ -11,7 +13,6 @@ function initialize() {
 	$.getJSON("https://node2.e-mesh.net/ping.json.php", function (data) {
 		pingData=data;
 	});
-
 	//Current Node URL with random bits to make sure it doesnt get cached
 	currentNodeListURL = document.getElementById("nodeURL").value + "?ramd=" + new Date();
 
@@ -86,8 +87,50 @@ function initialize() {
 			var mc = new MarkerClusterer(map, markers, mcOptions);
 		}
 
+	//Load Links
+		$.getJSON("https://node2.e-mesh.net/links.json.php", function (data) {
+			linkData=data;
+			LoadLinks();
+		});
 	});
 }
+function LoadLinks() {
+	for (var key in linkData) {
+	m1= [linkData[key]['from']];
+	m2= [linkData[key]['to']];
+	m1=markerByIPV6[m1];
+	m2=markerByIPV6[m2];
+	if (m1 && m2) {
+		var color="#0000FF";
+
+		//Manually defiened "datacenter" peers
+		if (
+			linkData[key]['from']=='fc4d:c8e5:9efe:9ac2:8e72:fcf7:6ce8:39dc' || 
+			linkData[key]['to']=='fc4d:c8e5:9efe:9ac2:8e72:fcf7:6ce8:39dc' |
+			linkData[key]['from']=='fc6e:691e:dfaa:b992:a10a:7b49:5a1a:5e09' || 
+			linkData[key]['to']=='fc6e:691e:dfaa:b992:a10a:7b49:5a1a:5e09' ||
+			linkData[key]['to']=='fcaa:5785:a537:90db:6513:bba9:87a0:12a7' || 
+			linkData[key]['from']=='fcaa:5785:a537:90db:6513:bba9:87a0:12a7') {
+	
+			color="#FF0000";
+		}
+	
+		var line = new google.maps.Polyline({
+			path: 
+				[
+					new google.maps.LatLng(m1.position.lat(),m1.position.lng()),
+					new google.maps.LatLng(m2.position.lat(),m2.position.lng())
+				],
+			strokeColor: color,
+			strokeOpacity: .3,
+			strokeWeight: 2,
+			map: map
+		});
+		line.setMap(map);
+		}
+	}
+}
+
 
 //Find a marker witth a specific lat lng and dir combo.  Used so that we dont create a new marker but rather add info to the existing one.
 function findMarker(lat, lng, dir) {
@@ -229,7 +272,7 @@ function addMarker(map, nodeResult, name, location) {
 			// Add circle overlay and bind to marker
 			circle = new google.maps.Circle({
 				map: map,
-				radius: 40, // 10 miles in metres
+				radius: 20, // 10 miles in metres
 				fillColor: '#AA0000'
 			});
 			circle.bindTo('center', marker, 'position');
@@ -241,10 +284,12 @@ function addMarker(map, nodeResult, name, location) {
 			infowindow.close();
 		});
 		//Returns marker to identify it was created not modified
+		markerByIPV6[nodeResult['IPV6Address']]=marker;
 		return marker;
 
 	//If marker already exists in direction and position, just add more information to the existing one.
 	} else {
+		markerByIPV6[nodeResult['nodeResult']]=marker;
 		if (marker.icon.url != IMG) {
 			
 			//Promot Scacked Marker is new node is better then the previous
@@ -263,7 +308,7 @@ function addMarker(map, nodeResult, name, location) {
 
 		}
 		//Update marker
-		marker.html = marker.html + Description;
+		markerByIPV6[nodeResult['IPV6Address']]=marker;
 		return undefined;
 	}
 }
