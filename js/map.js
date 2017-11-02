@@ -308,6 +308,7 @@ function addMarker(map, nodeResult, name, location) {
 
 		}
 		//Update marker
+		marker.html = marker.html + Description;
 		markerByIPV6[nodeResult['IPV6Address']]=marker;
 		return undefined;
 	}
