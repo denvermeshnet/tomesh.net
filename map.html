@@ -2,11 +2,7 @@
 layout: default
 title: Map
 order: 2
---- 
-<script type="text/javascript" src="/js/jquery-3.2.1.min.js"></script> 
-<script type="text/javascript" src="/js/markerclusterer.js"></script> 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfjIeSSWeDLOYt7f_cHHG4GtgOowvQFBs"></script> 
-<script type="text/javascript" src="/js/map.js"></script>
+---
 <div id="map">
   <div id="map_canvas"></div>
 </div>
@@ -24,13 +20,13 @@ order: 2
   </div>
   Show Active Nodes<br/>
   <div class="checkBoxSlider">
-    <input onChange="initialize()" type="checkbox" name="Proposed" id="chkProposed" checked />
+    <input onChange="initialize()" type="checkbox" name="Proposed" id="chkProposed"/>
     <label for="chkProposed"></label>
   </div>
   Show Proposed Nodes<br/>
   <br/>
   <div class="checkBoxSlider">
-    <input onChange="initialize()" type="checkbox" name="Group" id="chkGroup" checked />
+    <input onChange="initialize()" type="checkbox" name="Group" id="chkGroup"/>
     <label for="chkGroup"></label>
   </div>
   Group at higher zoom level <br />
@@ -85,3 +81,8 @@ order: 2
     <input class="button button-primary" type="button" value="Cancel" onClick="customCancel()" />
   </div>
 </div>
+
+<script src="/js/vendor/jquery-3.2.1.min.js"></script>
+<script src="/js/vendor/markerclusterer.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfjIeSSWeDLOYt7f_cHHG4GtgOowvQFBs"></script>
+<script src="/js/map.js"></script>

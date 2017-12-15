@@ -176,11 +176,6 @@
 
 // Site main feature
 
-.background-tint {
-  background-color: $black-color-transparent;
-  background-blend-mode: multiply;
-}
-
 .feature {
   color: $white;
   background-image: url(/images/watercolour.jpg);
@@ -266,6 +261,10 @@
   margin-bottom: 2em;
 }
 
+.post-footer {
+  margin-top: 4em;
+}
+
 .event-add {
   margin-top: 1em;
 }
@@ -273,8 +272,10 @@
 // Notices
 
 .notice {
-  margin-top: 4em;
-  margin-bottom: 4em;
+  margin-top: 55px;
+  padding-top: 4em;
+  padding-bottom: 4em;
+  min-height: calc(100% - 8em - 172px);
 }
 
 // Pagination
